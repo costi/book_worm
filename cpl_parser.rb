@@ -1,4 +1,5 @@
 require 'nokogiri'
+require 'item'
 class CplParser
   
   # options is a has of documents
