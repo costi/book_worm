@@ -1,5 +1,6 @@
 require 'nokogiri'
-require 'item'
+require 'bigdecimal'  #for fine amount
+require File.join(File.dirname(__FILE__), 'item')
 class CplParser
   
   # options is a has of documents
