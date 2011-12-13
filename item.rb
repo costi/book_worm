@@ -4,7 +4,25 @@ class Item
   ATTRIBUTES.each do |attr|
     attr_accessor attr 
   end
+
+  def due_date=(new_date)
+    case new_date
+    when String
+      @due_date = Date.parse(new_date)
+    when Date
+      @due_date = new_date
+    end
+  end
   
+  def pickup_by=(new_date)
+    case new_date
+    when String
+      @pickup_by = Date.parse(new_date)
+    when Date
+      @pickup_by = new_date
+    end
+  end
+
   def initialize(attrs = {})
     self.attributes = attrs
   end
