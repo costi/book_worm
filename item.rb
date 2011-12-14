@@ -7,19 +7,19 @@ class Item
 
   def due_date=(new_date)
     case new_date
-    when String
-      @due_date = Date.parse(new_date)
-    when Date
+    when Date, NilClass
       @due_date = new_date
+    else
+      raise ArgumentError, "due date requires to pass in a Date object or nil"
     end
   end
   
   def pickup_by=(new_date)
     case new_date
-    when String
-      @pickup_by = Date.parse(new_date)
-    when Date
+    when Date, NilClass
       @pickup_by = new_date
+    else
+      raise ArgumentError, "pickup_by requires to pass in a Date object or nil"
     end
   end
 
