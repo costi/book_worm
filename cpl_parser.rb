@@ -3,7 +3,8 @@ require 'bigdecimal'  #for fine amount
 require File.join(File.dirname(__FILE__), 'item')
 class CplParser
   
-  # options is a has of documents
+  # options is a hash of documents
+  # if we have all items in a single page, pass :all
   def initialize(options)
     if options[:all]
       @held_items_doc = @checked_out_items_doc = @overdue_items_doc = @total_fine_amount_doc = options[:all]
@@ -19,7 +20,7 @@ class CplParser
     items = []
     rows.each do |row|
       row = row.css('td')
-      items << Item.new(:title => row[1].content, :status => row[2].content, :pickup_by => row[4].content)
+      items << {:title => row[1].content, :status => row[2].content, :pickup_by => self.class.parse_date(row[4].content)}
     end
     items
   end
@@ -32,7 +33,7 @@ class CplParser
     items = []
     rows.each do |row|
       row = row.css('td')
-      items << Item.new(:title => row[1].content, :status => 'Checked out', :due_date => row[3].content)
+      items << {:title => row[1].content, :status => 'Checked out', :due_date => self.class.parse_date(row[3].content)}
     end
     items
     
@@ -50,6 +51,10 @@ class CplParser
     doc = Nokogiri::HTML(@total_fine_amount_doc)
     amount = doc.css('div.mycpl_green').last.css('table tr').last.css('td').last.content.delete('$')
     BigDecimal.new(amount)
+  end
+
+  def self.parse_date(date)
+    Date.strptime(date, '%m/%d/%Y')
   end
   
 end
