@@ -1,10 +1,12 @@
+require 'mechanize'
 class CplCrawler
+  attr_reader :library_card, :zip_code
 
-  def initialize(card_number, zip_code)
-    @card_number = card_number
-    @zip_code = zip_code
+  def initialize(new_library_card, new_zip_code)
+    @library_card = new_library_card
+    @zip_code = new_zip_code
     @summary_page = nil
-    @agent = WWW::Mechanize.new { |agent|
+    @agent = Mechanize.new { |agent|
       agent.user_agent_alias = 'Mac Safari'
     }
   end
@@ -12,8 +14,8 @@ class CplCrawler
   def login_to_library
     @agent.get('http://www.chipublib.org/mycpl/login/') do |login_page|
       @homepage = login_page.form_with(:action => '/mycpl/login/') do |f|
-        f.patronId = @card_number
-        f.zipCode = @zip_code
+        f.patronId = self.library_card
+        f.zipCode = self.zip_code
       end.click_button
     end
     @homepage
