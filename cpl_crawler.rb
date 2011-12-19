@@ -63,8 +63,12 @@ class CplCrawler
   def home_page
     @home_page ||= login!
   end
+
+  def summary_page_link
+    home_page.links.text(/Checked Out/)
+  end
   
   def summary_page
-    @summary_page ||= http_agent.click( home_page.links.text(/Checked Out/) )
+    @summary_page ||= http_agent.click( summary_page_link )
   end
 end

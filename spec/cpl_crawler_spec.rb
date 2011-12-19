@@ -46,11 +46,29 @@ describe CplCrawler do
     it 'sets the homepage after logging in to the library' do
       parser.send(:home_page).should == :page_after_login
     end
+
+    describe 'after login:' do
+      let(:summary_page){double 'Summary Page'} #this page contains all the info that we need 
+      before :each do
+        parser.stub(:summary_page_link).and_return(:summary_page_link)
+        parser.http_agent.should_receive(:click).with(:summary_page_link).and_return(summary_page)
+      end
+      it 'browses to summary page after reaching the homepage' do
+        parser.send(:summary_page).should == summary_page
+      end
+      it 'has the held items in the summary page' do
+        parser.send(:holds_page).should == summary_page
+      end
+      it 'has the checked out items in the summary page' do
+        parser.send(:checked_out_page).should == summary_page
+      end
+      it 'has the overdue items in the summary page' do
+        parser.send(:overdue_page).should == summary_page
+      end
+      it 'has the fines in the summary page' do
+        parser.send(:fines_page).should == summary_page
+      end
+    end
   end
-  it 'can browse to summary page after reaching the homepage'
-  it 'has the held items in the summary page'
-  it 'has the checked out items in the summary page'
-  it 'has the overdue items in the summary page'
-  it 'has the fines in the summary page'
 
 end
