@@ -40,6 +40,16 @@ class CplParser
   end
   
   def overdue_items
+    doc = Nokogiri::HTML(@overdue_items_doc)
+    # I go the the Overdue text and then I go to its parent to get to the table containing the items 
+    rows = doc.css('h3#overdues').first.parent.parent.css('table tr')
+    rows.delete(rows.first)  # exclude the header
+    items = []
+    rows.each do |row|
+      row = row.css('td')
+      items << {:title => row[1].content, :status => 'Overdue', :due_date => self.class.parse_date(row[3].content)}
+    end
+    items
     
   end
   
