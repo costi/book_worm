@@ -39,9 +39,11 @@ describe CplCrawler do
       login_form.should_receive(:zipCode=).with(parser.zip_code)
       parser.send(:filled_in_login_form).should == login_form
     end
-    it '4. submits the form and gets the homepage for successful login' do
+
+    it '4a. submits the form and gets the homepage for successful login' do
       parser.send(:login!).should == :page_after_login
     end
+    it '4b. submits the form and gets access denied'
 
     it 'sets the homepage after logging in to the library' do
       parser.send(:home_page).should == :page_after_login
