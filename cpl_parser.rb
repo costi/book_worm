@@ -50,11 +50,6 @@ class CplParser
       items << {:title => row[1].content, :status => 'Overdue', :due_date => self.class.parse_date(row[3].content)}
     end
     items
-    
-  end
-  
-  def returned_items
-    
   end
   
   def total_fine_amount
