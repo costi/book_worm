@@ -1,6 +1,6 @@
 require 'spec_helper'
-require File.join(AppRoot, 'cpl_crawler')
-describe CplCrawler do
+require 'book_worm/cpl_crawler'
+describe BookWorm::CplCrawler do
 # Commented out this test because is goes online and I want fast tests  
 #  it "should be able to login into the CPL website" do
 #    c = CplCrawler.new('d054635158', '60626')

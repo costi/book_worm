@@ -1,4 +1,4 @@
 source "http://rubygems.org"
-gem "nokogiri"
-gem "mechanize"
 
+# Specify your gem's dependencies in book_worm.gemspec
+gemspec

@@ -1,6 +1,6 @@
 require 'spec_helper'
-require File.join(AppRoot, 'item')
-describe Item do
+require 'book_worm/item'
+describe BookWorm::Item do
   let(:item){described_class.new}
   it 'has a title' do
     item.title = "A MAN"

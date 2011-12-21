@@ -1,5 +1,5 @@
 require 'mechanize'
-class CplCrawler
+class BookWorm::CplCrawler
   attr_reader :library_card, :zip_code, :http_agent
 
   def initialize(new_library_card, new_zip_code)

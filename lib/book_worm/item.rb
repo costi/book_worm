@@ -1,5 +1,5 @@
 require 'date'
-class Item
+class BookWorm::Item
   ATTRIBUTES = [:title, :status, :due_date, :pickup_by]
   ATTRIBUTES.each do |attr|
     attr_accessor attr 

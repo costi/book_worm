@@ -1,7 +1,6 @@
 require 'nokogiri'
 require 'bigdecimal'  #for fine amount
-require File.join(File.dirname(__FILE__), 'item')
-class CplParser
+class BookWorm::CplParser
   
   # options is a hash of documents
   # if we have all items in a single page, pass :all
