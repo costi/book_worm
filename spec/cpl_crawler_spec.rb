@@ -40,19 +40,28 @@ describe BookWorm::CplCrawler do
       parser.send(:filled_in_login_form).should == login_form
     end
 
-    it '4a. submits the form and gets the homepage for successful login' do
+    it '4 submits the form and gets the page after login' do
       parser.send(:login!).should == :page_after_login
     end
-    it '4b. submits the form and gets access denied'
 
     it 'sets the homepage after logging in to the library' do
       parser.send(:home_page).should == :page_after_login
     end
 
+    it 'detects if logged in by checking the summary page link' do
+      parser.stub(:home_page).and_return(double 'Home Page', :link_with => :found_link)
+      parser.send(:logged_in?).should == true
+    end
+
+    it 'detects if not logged in by checking the summary page link' do
+      parser.stub(:home_page).and_return(double 'Home Page', :link_with => nil)
+      parser.send(:logged_in?).should == false
+    end
+
     describe 'after login:' do
       let(:summary_page){double 'Summary Page'} #this page contains all the info that we need 
       before :each do
-        parser.stub(:summary_page_link).and_return(:summary_page_link)
+        parser.stub(:link_to_summary_page).and_return(:summary_page_link)
         parser.http_agent.should_receive(:click).with(:summary_page_link).and_return(summary_page)
       end
       it 'browses to summary page after reaching the homepage' do

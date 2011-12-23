@@ -60,15 +60,20 @@ class BookWorm::CplCrawler
     @home_page = filled_in_login_form.click_button
   end
 
+  # we still get a HTTP 200 on failed login so we detect failed login after the page we land on
+  def logged_in?
+    !!link_to_summary_page
+  end
+
   def home_page
     @home_page ||= login!
   end
 
-  def summary_page_link
-    home_page.links.text(/Checked Out/)
+  def link_to_summary_page
+    home_page.link_with(:text => /Checked Out/)
   end
   
   def summary_page
-    @summary_page ||= http_agent.click( summary_page_link )
+    @summary_page ||= http_agent.click( link_to_summary_page )
   end
 end
