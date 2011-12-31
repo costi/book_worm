@@ -21,6 +21,11 @@ Gem::Specification.new do |s|
   # specify any dependencies here:
   s.add_development_dependency "rspec"
   #s.add_development_dependency "hoe"
-  s.add_runtime_dependency "nokogiri"
-  s.add_runtime_dependency "mechanize"
+  s.add_development_dependency "cucumber" 
+  s.add_development_dependency "capybara" # for integration testing
+  s.add_development_dependency "shotgun"  # Development mode for sinatra
+  s.add_development_dependency "sinatra"  # for the mock website in integration testing
+  s.add_runtime_dependency "nokogiri"   # to parse the pages
+  s.add_runtime_dependency "mechanize"  # to browse the cpl website
+
 end

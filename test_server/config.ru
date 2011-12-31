@@ -1,0 +1,2 @@
+require './cpl'
+run MockCpl
