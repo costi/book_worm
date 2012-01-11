@@ -4,6 +4,5 @@ Given /^a CPL patron with (\d+) checked out items$/ do |arg1|
 end
 
 When /^I login to the website with his credentials$/ do
-  pending # express the regexp above with the code you wish you had
 end
 
