@@ -1,13 +1,14 @@
 sinatrapid = fork do
-  log = File.open('sinatra.log', 'a+')
+  test_server_dir = File.dirname(__FILE__) + '/../../test_server'
+  log = File.open("#{test_server_dir}/log/sinatra.log", 'a+')
   STDOUT.reopen(log)
   STDERR.reopen(STDOUT)
   STDIN.close
   puts 'requiring cpl.rb...'
-  require File.dirname(__FILE__) + '/../../test_server/cpl.rb'
+  require "#{test_server_dir}/cpl.rb"
   puts 'attempting to start the server...'
   MockCpl.run!
-  f.close
+  log.close
 end
 
 
@@ -51,13 +52,13 @@ Before do
     end
 =end 
 
-
+TEST_SERVER = 'http://localhost:4567'
 sinatra_spinup_timeout = 5
 begin 
   Timeout.timeout(sinatra_spinup_timeout) do 
     puts "waiting #{sinatra_spinup_timeout} seconds for the server mock server to start"
     sleep 2 
-    `curl http://localhost:4567`
+    `curl #{TEST_SERVER}`
   end
 rescue Timeout::Error
   puts 'Could not start mock server. See log file.'
