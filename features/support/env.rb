@@ -20,38 +20,6 @@ World do
   include RSpec::Matchers
 end
 
-=begin
-Before do
-#use threads
-  # thread.run, thread.start
-  #  thread.join
-      def assemble_app
-      config = @config
-      inner_app = self.inner_app
-      Rack::Builder.new {
-        instance_eval(&config)
-        run inner_app
-      }.to_app
-    end
-
-    def inner_app
-      if rackup_file =~ /\.ru$/
-        config = File.read(rackup_file)
-        eval "Rack::Builder.new {( #{config}\n )}.to_app", nil, rackup_file
-      else
-        require File.expand_path(rackup_file)
-        if defined? Sinatra::Application
-          Sinatra::Application.set :reload, false
-          Sinatra::Application.set :logging, false
-          Sinatra::Application.set :raise_errors, true
-          Sinatra::Application
-        else
-          Object.const_get(camel_case(File.basename(rackup_file, '.rb')))
-        end
-      end
-    end
-=end 
-
 TEST_SERVER = 'http://localhost:4567'
 sinatra_spinup_timeout = 5
 begin 
