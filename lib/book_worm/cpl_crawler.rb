@@ -1,6 +1,7 @@
 require 'mechanize'
 class BookWorm::CplCrawler
   attr_reader :library_card, :zip_code, :http_agent
+  attr_accessor :start_url
 
   def initialize(new_library_card, new_zip_code)
     @library_card = new_library_card
@@ -9,10 +10,11 @@ class BookWorm::CplCrawler
     @http_agent = Mechanize.new { |agent|
       agent.user_agent_alias = 'Mac Safari'
     }
+    @start_url = 'http://www.chipublib.org/mycpl/login/'
   end
 
   def login_to_library
-    http_agent.get('http://www.chipublib.org/mycpl/login/') do |login_page|
+    http_agent.get(start_url) do |login_page|
       @homepage = login_page.form_with(:action => '/mycpl/login/') do |f|
         f.patronId = self.library_card
         f.zipCode = self.zip_code
