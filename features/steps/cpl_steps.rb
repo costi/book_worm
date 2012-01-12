@@ -4,5 +4,6 @@ Given /^a CPL patron with (\d+) checked out items$/ do |arg1|
 end
 
 When /^I login to the website with his credentials$/ do
+  BookWorm::CplCrawler.new(@library_card, @zip_code)
 end
 
