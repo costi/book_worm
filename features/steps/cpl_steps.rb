@@ -4,6 +4,14 @@ Given /^a CPL patron with (\d+) checked out items$/ do |arg1|
 end
 
 When /^I login to the website with his credentials$/ do
-  BookWorm::CplCrawler.new(@library_card, @zip_code)
+  @crawler = BookWorm::CplCrawler.new(@library_card, @zip_code)
+  @crawler.start_url = "http://localhost:4567/mycpl/login"
+  @crawler.login!
+end
+
+Then /^I get to his homepage$/ do
+  pending do
+    @crawler.home_page.should_not be_nil
+  end
 end
 
