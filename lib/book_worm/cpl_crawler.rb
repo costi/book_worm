@@ -13,16 +13,6 @@ class BookWorm::CplCrawler
     @start_url = 'http://www.chipublib.org/mycpl/login/'
   end
 
-  def login_to_library
-    http_agent.get(start_url) do |login_page|
-      @homepage = login_page.form_with(:action => '/mycpl/login/') do |f|
-        f.patronId = self.library_card
-        f.zipCode = self.zip_code
-      end.click_button
-    end
-    @homepage
-  end
-
   def holds_page
     summary_page  
   end
@@ -45,7 +35,7 @@ class BookWorm::CplCrawler
   # login_page -> fill login form -> click -> get home page => get summary page
   
   def login_page 
-    @login_page ||= http_agent.get('http://www.chipublib.org/mycpl/login/')
+    @login_page ||= http_agent.get(start_url)
   end
 
   def login_form
