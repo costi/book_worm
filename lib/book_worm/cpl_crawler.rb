@@ -66,6 +66,7 @@ class BookWorm::CplCrawler
   end
   
   def summary_page
-    @summary_page ||= http_agent.click( link_to_summary_page )
+    #@summary_page ||= _agent.click( link_to_summary_page )
+    @summary_page ||= link_to_summary_page.click
   end
 end

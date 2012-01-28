@@ -17,7 +17,7 @@ include BookWorm::CplTest
 
 require 'rspec'
 
-TEST_SERVER = 'http://localhost:4567'
+TEST_SERVER = 'http://localhost:4567/'
 sinatra_spinup_timeout = 5
 begin 
   Timeout.timeout(sinatra_spinup_timeout) do 
