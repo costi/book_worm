@@ -2,3 +2,4 @@
 .bundle
 Gemfile.lock
 pkg/*
+integration_test/auth_secrets.yml

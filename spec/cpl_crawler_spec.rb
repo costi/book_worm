@@ -33,14 +33,14 @@ describe BookWorm::CplCrawler do
     let(:login_page){double 'Login Page', :form_with => login_form} 
     let(:login_form){double 'Login Form', :click_button => home_page}
     let(:home_page) {double 'Home Page (Page after succesful login)'}
-    let(:link_to_summary_page) {double 'Link to summary page', :click => summary_page}
-    let(:summary_page){double 'Summary Page'}
+    let(:link_to_account_detail_page) {double 'Link to account_detail page', :click => account_detail_page}
+    let(:account_detail_page){double 'account_detail Page'}
 
     before :each do
       http_agent.stub(:get).and_return(login_page)
       login_form.stub(:patronId=).with(crawler.library_card)
       login_form.stub(:zipCode=).with(crawler.zip_code)
-      home_page.stub(:link_with).with(:text => /Checked Out/).and_return(link_to_summary_page)
+      home_page.stub(:link_with).with(:text => /Checked Out/).and_return(link_to_account_detail_page)
     end
 
 
@@ -68,29 +68,29 @@ describe BookWorm::CplCrawler do
     it 'sets the homepage after logging in to the library' do
       crawler.send(:home_page).should == home_page
     end
-    it 'detects if logged in by checking the summary page link' do
+    it 'detects if logged in by checking the account_detail page link' do
       crawler.send(:logged_in?).should == true
     end
 
-    it 'browses to summary page after reaching the homepage' do
-      crawler.send(:summary_page).should == summary_page
+    it 'browses to account_detail page after reaching the homepage' do
+      crawler.send(:account_detail_page).should == account_detail_page
     end
-    it 'has the held items in the summary page' do
-      crawler.send(:holds_page).should == summary_page
+    it 'has the held items in the account_detail page' do
+      crawler.send(:holds_page).should == account_detail_page
     end
-    it 'has the checked out items in the summary page' do
-      crawler.send(:checked_out_page).should == summary_page
+    it 'has the checked out items in the account_detail page' do
+      crawler.send(:checked_out_page).should == account_detail_page
     end
-    it 'has the overdue items in the summary page' do
-      crawler.send(:overdue_page).should == summary_page
+    it 'has the overdue items in the account_detail page' do
+      crawler.send(:overdue_page).should == account_detail_page
     end
-    it 'has the fines in the summary page' do
-      crawler.send(:fines_page).should == summary_page
+    it 'has the fines in the account_detail page' do
+      crawler.send(:fines_page).should == account_detail_page
     end
 
     describe 'misshaps:' do
 
-      describe 'with link to summary page not found in home page' do
+      describe 'with link to account_detail page not found in home page' do
         before :each do 
           home_page.stub(:link_with).with(:text => /Checked Out/).and_return(nil)
         end
@@ -98,8 +98,8 @@ describe BookWorm::CplCrawler do
         it 'is not logged in' do
           crawler.send(:logged_in?).should == false
         end
-        it 'returns nil for summary page' do
-          crawler.send(:summary_page).should == nil
+        it 'returns nil for account_detail page' do
+          crawler.send(:account_detail_page).should == nil
         end
       end
 
@@ -110,9 +110,9 @@ describe BookWorm::CplCrawler do
           end
         end
 
-        it 'returns nil for summary page' do
+        it 'returns nil for account_detail page' do
           pending
-          crawler.send(:summary_page).should == nil
+          crawler.send(:account_detail_page).should == nil
         end
       end
 
@@ -121,10 +121,10 @@ describe BookWorm::CplCrawler do
 
     # TODO: Move this in the happy path and get rid of stubs
     describe 'after login:' do
-      let(:summary_page){double 'Summary Page'} #this page contains all the info that we need 
+      let(:account_detail_page){double 'account_detail Page'} #this page contains all the info that we need 
       before :each do
-        crawler.stub(:link_to_summary_page).and_return(:summary_page_link)
-        crawler.http_agent.should_receive(:click).with(:summary_page_link).and_return(summary_page)
+        crawler.stub(:link_to_account_detail_page).and_return(:account_detail_page_link)
+        crawler.http_agent.should_receive(:click).with(:account_detail_page_link).and_return(account_detail_page)
       end
     end
   end

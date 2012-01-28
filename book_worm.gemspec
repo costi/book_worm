@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   # specify any dependencies here:
-  s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec", ">= 1.8.0"  # for default tags feature: to exclude live test by default
   #s.add_development_dependency "hoe"
   s.add_development_dependency "cucumber" 
   s.add_development_dependency "capybara" # for integration testing
