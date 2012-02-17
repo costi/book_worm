@@ -8,6 +8,7 @@ end
 
 Spec::Core::RakeTask.new(:integration_test) do |t|
   t.pattern = './integration_test/*_spec.rb'
+  t.rspec_opts = '--tag ~live'
 end
 
 

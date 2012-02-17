@@ -18,6 +18,8 @@ describe 'Crawler and Parser together' do
   it 'handles 404 login page' do
     @crawler = BookWorm::CplCrawler.new('bogus', '345253')
     @crawler.start_url = TEST_SERVER + "bogus_page/"
+    require 'pry'
+    binding.pry
     @crawler.overdue_page.should be_nil
     @crawler.errors.should include(:login_page_not_found)
   end

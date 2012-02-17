@@ -1,12 +1,6 @@
 require 'spec_helper'
 require 'book_worm/cpl_crawler'
 describe BookWorm::CplCrawler do
-# Commented out this test because is goes online and I want fast tests  
-#  it "should be able to login into the CPL website" do
-#    c = CplCrawler.new('d054635158', '60626')
-#    c.login_to_library.content.should include('My Library Card', 'My Personal Information', 'My Preferred Library')
-#  end
-  
   let(:crawler){ crawler = described_class.new('g1234', '60606')}
   let(:http_agent){double 'HTTP Agent'}
   before :each do
@@ -28,7 +22,7 @@ describe BookWorm::CplCrawler do
     crawler.start_url.should match(/localhost/)
   end
 
-  describe 'Authentication:' do
+  describe 'Crawling' do
 
     let(:login_page){double 'Login Page', :form_with => login_form} 
     let(:login_form){double 'Login Form', :click_button => home_page}
@@ -56,7 +50,6 @@ describe BookWorm::CplCrawler do
       crawler.send(:login_form).should == login_form
     end
 
-    it 'handles login form missing on login page'
     it '3. fills in the form' do
       login_form.should_receive(:patronId=).with(crawler.library_card)
       login_form.should_receive(:zipCode=).with(crawler.zip_code)
@@ -89,44 +82,40 @@ describe BookWorm::CplCrawler do
     end
 
     describe 'misshaps:' do
+      it 'handles login form missing on login page'
 
       describe 'with link to account_detail page not found in home page' do
         before :each do 
           home_page.stub(:link_with).with(:text => /Checked Out/).and_return(nil)
         end
 
-        it 'is not logged in' do
-          crawler.send(:logged_in?).should == false
-        end
-        it 'returns nil for account_detail page' do
-          crawler.send(:account_detail_page).should == nil
+        it 'returns nil for crawl and sets the error message' do
+          crawler.crawl.should == nil
+          crawler.errors[:crawl].should =~ /Cannot find the link to account_detail page/
         end
       end
 
       describe 'with login page not found' do
         before :each do
+          page = mock 'Page', :code => 404, :uri => "login" 
           http_agent.stub(:get) do
-            raise Mechanize::ResponseCodeError, '404 => Net::HTTPNotFound'
+            raise Mechanize::ResponseCodeError, page 
           end
+          crawler.crawl.should == nil
         end
 
-        it 'returns nil for account_detail page' do
-          pending
-          crawler.send(:account_detail_page).should == nil
+        it 'returns nil for crawl and sets the error message' do
+          crawler.errors[:mechanize].should =~ /404 => Net::HTTPNotFound/
+        end
+
+        it 'sets the page url that gave us the error' do
+          crawler.errors[:page_url].should =~ /login/
         end
       end
 
 
     end
 
-    # TODO: Move this in the happy path and get rid of stubs
-    describe 'after login:' do
-      let(:account_detail_page){double 'account_detail Page'} #this page contains all the info that we need 
-      before :each do
-        crawler.stub(:link_to_account_detail_page).and_return(:account_detail_page_link)
-        crawler.http_agent.should_receive(:click).with(:account_detail_page_link).and_return(account_detail_page)
-      end
-    end
   end
 
 end

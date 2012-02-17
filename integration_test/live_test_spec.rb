@@ -1,10 +1,11 @@
 require 'spec_helper'
 require 'yaml'
+# this 
 describe 'Live Test' do
   let(:config){ YAML.load(File.read(File.dirname(__FILE__) + '/auth_secrets.yml'))}
   let(:library_card) {config['library_card']}
   let(:zip_code) {config['zip_code']}
-  let(:crawler){ BookWorm::CplCrawler.new(library_card, zip_code)}
+  let(:crawler){ BookWorm::CplCrawler.new(*[library_card, zip_code])}
 
   it 'logs and gets to the account detail succesfully', :live => true do
     home_page = crawler.send(:login!)
