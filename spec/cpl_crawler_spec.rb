@@ -82,22 +82,42 @@ describe BookWorm::CplCrawler do
     end
 
     describe 'misshaps:' do
-      it 'handles login form missing on login page'
+      describe 'with login form missing on login page' do
+        before :each do
+          login_page.should_receive(:form_with).and_return(nil)
+          login_page.should_receive(:uri).and_return('login page uri')
+          login_page.should_receive(:html_body).and_return('<html>body</html>')
+          crawler.crawl.should == nil
+        end
+        it 'returns nil for crawl and sets the error message' do
+          crawler.errors[:message].should =~ /Cannot find the login form in the login page/
+        end
+      end
 
       describe 'with link to account_detail page not found in home page' do
         before :each do 
           home_page.stub(:link_with).with(:text => /Checked Out/).and_return(nil)
+          home_page.should_receive(:uri).and_return('home page uri')
+          home_page.should_receive(:html_body).and_return('<html>body</html>')
+          crawler.crawl.should == nil
         end
 
         it 'returns nil for crawl and sets the error message' do
-          crawler.crawl.should == nil
-          crawler.errors[:crawl].should =~ /Cannot find the link to account_detail page/
+          crawler.errors[:message].should =~ /Cannot find the link to account_detail page/
+        end
+
+        it 'sets the page url that gave us the error' do
+          crawler.errors[:page_url].should =~ /home page uri/
+        end
+
+        it 'sets the page body that gave us the error' do
+          crawler.errors[:page_body].should =~ /body/
         end
       end
 
-      describe 'with login page not found' do
+      describe 'with login page not found (this whould take care of any 404 error)' do
         before :each do
-          page = mock 'Page', :code => 404, :uri => "login" 
+          page = mock 'Page', :code => 404, :uri => "login", :html_body => 'body'
           http_agent.stub(:get) do
             raise Mechanize::ResponseCodeError, page 
           end
@@ -105,11 +125,15 @@ describe BookWorm::CplCrawler do
         end
 
         it 'returns nil for crawl and sets the error message' do
-          crawler.errors[:mechanize].should =~ /404 => Net::HTTPNotFound/
+          crawler.errors[:message].should =~ /404 => Net::HTTPNotFound/
         end
 
         it 'sets the page url that gave us the error' do
           crawler.errors[:page_url].should =~ /login/
+        end
+
+        it 'sets the page body that gave us the error' do
+          crawler.errors[:page_body].should =~ /body/
         end
       end
 

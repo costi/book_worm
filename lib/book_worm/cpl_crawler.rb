@@ -1,7 +1,13 @@
 require 'mechanize'
 
 module BookWorm
-  class CrawlError < Exception; end
+  class CrawlError < Exception;
+    attr_reader :page, :message
+    def initialize(a_message, a_page)
+      @message = a_message
+      @page = a_page
+    end
+  end
 
   class CplCrawler
     attr_reader :library_card, :zip_code, :http_agent, :errors
@@ -24,12 +30,10 @@ module BookWorm
       # TODO flush the page cache. We cache the crawled pages.
       begin
         account_detail_page #This will get us as far as we want to go, through several pages
-      rescue CrawlError => e
-        errors[:crawl] = e.message
-        return nil
-      rescue Mechanize::ResponseCodeError => e
-        errors[:mechanize] = e.message
+      rescue *ERRORS_TO_RESCUE_FROM => e
+        errors[:message] = e.message
         errors[:page_url] = e.page.uri
+        errors[:page_body] = e.page.html_body
         return nil
       end
     end
@@ -60,7 +64,8 @@ module BookWorm
     end
 
     def login_form
-      @login_form ||= login_page.form_with(:action => '/mycpl/login/') 
+      @login_form ||= login_page.form_with(:action => '/mycpl/login/') or  
+        raise CrawlError.new('Cannot find the login form in the login page', login_page)
     end
 
     def filled_in_login_form
@@ -85,7 +90,7 @@ module BookWorm
     def link_to_account_detail_page
       link = home_page.link_with(:text => /Checked Out/)
       if !link
-        raise CrawlError, 'Cannot find the link to account_detail page'
+        raise CrawlError.new('Cannot find the link to account_detail page', home_page)
       end
       link
     end
