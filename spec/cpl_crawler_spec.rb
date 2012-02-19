@@ -86,7 +86,7 @@ describe BookWorm::CplCrawler do
         before :each do
           login_page.should_receive(:form_with).and_return(nil)
           login_page.should_receive(:uri).and_return('login page uri')
-          login_page.should_receive(:html_body).and_return('<html>body</html>')
+          login_page.should_receive(:body).and_return('<html>body</html>')
           crawler.crawl.should == nil
         end
         it 'returns nil for crawl and sets the error message' do
@@ -98,7 +98,7 @@ describe BookWorm::CplCrawler do
         before :each do 
           home_page.stub(:link_with).with(:text => /Checked Out/).and_return(nil)
           home_page.should_receive(:uri).and_return('home page uri')
-          home_page.should_receive(:html_body).and_return('<html>body</html>')
+          home_page.should_receive(:body).and_return('<html>body</html>')
           crawler.crawl.should == nil
         end
 
@@ -117,7 +117,7 @@ describe BookWorm::CplCrawler do
 
       describe 'with login page not found (this whould take care of any 404 error)' do
         before :each do
-          page = mock 'Page', :code => 404, :uri => "login", :html_body => 'body'
+          page = mock 'Page', :code => 404, :uri => "login", :body => 'body'
           http_agent.stub(:get) do
             raise Mechanize::ResponseCodeError, page 
           end

@@ -33,32 +33,32 @@ module BookWorm
       rescue *ERRORS_TO_RESCUE_FROM => e
         errors[:message] = e.message
         errors[:page_url] = e.page.uri
-        errors[:page_body] = e.page.html_body
+        errors[:page_body] = e.page.body
         return nil
       end
     end
 
     def holds_page
-      account_detail_page  
+      crawl  
     end
-    
+
     def checked_out_page
-      account_detail_page
+      crawl
     end
 
     def overdue_page
-      account_detail_page
+      crawl
     end
-    
+
     def fines_page
-      account_detail_page
+      crawl
     end
-    
+
     private
 
     # Workflow:
     # login_page -> fill login form -> click -> get home page => get account_detail page
-    
+
     def login_page 
       @login_page ||= http_agent.get(start_url)
     end
@@ -88,13 +88,10 @@ module BookWorm
     end
 
     def link_to_account_detail_page
-      link = home_page.link_with(:text => /Checked Out/)
-      if !link
-        raise CrawlError.new('Cannot find the link to account_detail page', home_page)
-      end
-      link
+      link = home_page.link_with(:text => /Checked Out/) or
+        raise CrawlError.new('Failed login / Cannot find the link to account_detail page', home_page)
     end
-    
+
     def account_detail_page
       @account_detail_page ||= link_to_account_detail_page.click
     end

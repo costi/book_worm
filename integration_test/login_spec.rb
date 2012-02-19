@@ -13,21 +13,21 @@ describe 'Crawler and Parser together' do
     @crawler = BookWorm::CplCrawler.new('bogus', '345253')
     @crawler.start_url = TEST_SERVER + "mycpl/login/"
     @crawler.overdue_page.should be_nil
+    @crawler.errors[:message].should =~ /Failed login/
   end
 
   it 'handles 404 login page' do
     @crawler = BookWorm::CplCrawler.new('bogus', '345253')
     @crawler.start_url = TEST_SERVER + "bogus_page/"
-    require 'pry'
-    binding.pry
     @crawler.overdue_page.should be_nil
-    @crawler.errors.should include(:login_page_not_found)
+    @crawler.errors[:page_url].to_s.should == @crawler.start_url
+    @crawler.errors[:message].should =~ /404/
   end
    
   it 'handles login page with missing login form' do
     @crawler = BookWorm::CplCrawler.new('bogus', '345253')
     @crawler.start_url = TEST_SERVER + "/"
     @crawler.overdue_page.should be_nil
-    @crawler.errors.should include(:missing_login_form)
+    @crawler.errors[:message].should =~ /login form/
   end
 end
