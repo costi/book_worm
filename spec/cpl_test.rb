@@ -5,6 +5,11 @@ module BookWorm
      FAILED_LOGIN_PAGE = File.join(HTML_PAGES, "failed_login_page.html")
      HOME_PAGE = File.join(HTML_PAGES, "home_page.html")
      FINES_PAGE = File.join(HTML_PAGES, "just_fines.html")
+
+     # checked_out_overdue_on_hold.html has:
+     # 1 overdue items
+     # 4 held items
+     # 5 checked out items
      SUMMARY_PAGE = File.join(HTML_PAGES, 'checked_out_overdue_on_hold.html')
 
      LIBRARY_CARD_OK = 'd123456789' 

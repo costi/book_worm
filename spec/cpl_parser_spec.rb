@@ -53,10 +53,10 @@ describe BookWorm::CplParser do
 
   it 'should parse an overdue items row' do
     p = described_class.new(:all => File.read(SUMMARY_PAGE))
-    co_item = p.overdue_items.first
-    co_item[:title].should == "Cría cuervos" 
-    co_item[:status].should == 'Overdue'
-    co_item[:due_date].should == Date.parse('2009-11-04')
+    item = p.overdue_items.first
+    item[:title].should == "Cría cuervos"
+    item[:status].should == 'Overdue'
+    item[:due_date].should == Date.parse('2009-11-04')
   end
 
   it 'parses the due_date in american format' do

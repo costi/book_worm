@@ -1,3 +1,4 @@
+#encoding: UTF-8
 require 'spec_helper'
 require_relative 'integration_env'
 
@@ -7,8 +8,14 @@ describe 'Crawler and Parser together' do
     zip_code = BookWorm::CplTest::ZIP_CODE_OK
     crawler = BookWorm::CplCrawler.new(library_card, zip_code)
     crawler.start_url = TEST_SERVER + "mycpl/login/"
-    crawler.overdue_page.should_not be_nil
+    parser = BookWorm::CplParser.new(:all => crawler.crawl.body)
+    parser.overdue_items.size.should == 1
+    item = parser.overdue_items.first
+    item[:title].should == "Cría cuervos"
+    item[:status].should == 'Overdue'
+    item[:due_date].should == Date.parse('2009-11-04')
   end
+
   it 'fails login the for invalid username' do
     crawler = BookWorm::CplCrawler.new('bogus', '345253')
     crawler.start_url = TEST_SERVER + "mycpl/login/"
